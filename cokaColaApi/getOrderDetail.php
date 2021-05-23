@@ -1,16 +1,10 @@
 <?php
 include_once '__db.php';	
 
-	if($_SERVER['REQUEST_METHOD']!=='GET'){
-		
-		die(showMessage([400,1,'Request Method Should be GET']));
-	
-	}
 	if( (!isset($_GET['deliveryDate'])) || (!isset($_GET['status'])) || (!isset($_GET['page'])) || (!isset($_GET['limit']))){
 
-			die(showMessage([403,1,'Deivery Date or Status or Page or Limit']));	
+			die(showMessage(['status'=>403,'Error Message'=>'Missing of Arguments: Deivery Date or Status or Page or Limit']));	
 	}
-
 
 
 	$deliveryDate =  mysqli_real_escape_string($conn,dataFilter($_GET['deliveryDate']));
