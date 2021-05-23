@@ -2,7 +2,12 @@
 
 	// creating Response Message 
 		function showMessage(array $data){
-			return json_encode($data);
+			return json_encode([
+				'Status'=>$data[0],
+				'Error'=>$data[1],
+				'Message'=>$data[2]
+				]
+			);
 		}	
 	
 	// Checking api-key in header Section 
@@ -10,7 +15,7 @@
 		
 		if((!isset($headers['api-key'])) || (empty($headers['api-key'])))
 		{
-			die(showMessage(['Status'=>403,'Error'=>1 ,'Message'=>'Required Api-Key for Authentication']));	
+			die(showMessage([403,1,'Required Api-Key for Authentication']));	
 		}
 
 	// Checking api-key in header Section 
@@ -23,7 +28,7 @@
 
 		if(!$conn){
 
-			die(showMessage(['status'=>403,'Error'=>1 ,'Message'=>@mysqli_connect_error()]));
+			die(showMessage([403,1 ,@mysqli_connect_error()]));
 		}
 
 
@@ -48,7 +53,7 @@
 		$numberOfRows = mysqli_num_rows($check);
 
 		if($numberOfRows==0){
-			die(showMessage(['status'=>403,'Error'=>1 ,'Message'=>'Invalid Api-key']));		
+			die(showMessage([403,1 ,'Invalid Api-key']));		
 		}
 
 

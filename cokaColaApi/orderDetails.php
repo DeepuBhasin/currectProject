@@ -53,7 +53,7 @@ include_once '__db.php';
 	$sql2_rows = mysqli_num_rows($sql2_data);
 	
 	if($sql2_rows==0){
-		die(showMessage(['status'=>200,'Error'=>1 ,'Message'=>'Data is not Available']));	
+		die(showMessage([200,1 ,'Data is not Available']));	
 	}
 
 	$rows = mysqli_fetch_all($sql2_data,MYSQLI_ASSOC);
@@ -74,8 +74,5 @@ include_once '__db.php';
 			'deliveryDate'=>$rows[$i]['date_added'],
 			); 
 	}
-
-	
-
-	die(showMessage(['status'=>200,'Error'=>0,'Message'=>['items'=>$items,'pageinfo'=>$page_info]]));
+	die(showMessage([200,0,['items'=>$items,'pageinfo'=>$page_info]]));
 ?>
