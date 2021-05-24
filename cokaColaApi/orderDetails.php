@@ -13,8 +13,8 @@ include_once '__db.php';
 	$orderid =  mysqli_real_escape_string($conn,dataFilter($_GET['orderid']));
 	
 
-	$sql1 = "SELECT oc.order_id,oc.store_name,oc.store_id,oc.date_added,oc.comment,oc.user_agent,oc.customer_id,oc.firstname,oc.lastname,oc.email,oc.telephone,oc.commission,oc.total,oc.shipping_method,oc.shipping_address_1,oc.email,oc.shipping_city,oc.shipping_zone,oc.shipping_postcode,oc.payment_method,oc.payment_company,oc.payment_address_1,ocs.name as status
-FROM oc_order as oc INNER JOIN oc_order_status as ocs ON ocs.order_status_id=oc.order_status_id  WHERE oc.language_id=ocs.language_id and oc.order_id=$orderid";
+	$sql1 = "SELECT oc.order_id,oc.store_name,oc.store_id,oc.date_added,oc.comment,oc.user_agent,oc.customer_id,oc.firstname,oc.lastname,oc.email,oc.telephone,oc.commission,oc.total,oc.shipping_method,oc.shipping_address_1,oc.email,oc.shipping_city,oc.shipping_zone,oc.shipping_postcode,oc.payment_method,oc.payment_company,oc.payment_address_1,ocs.name as status,oo.order_product_id
+FROM oc_order as oc INNER JOIN oc_order_status as ocs ON ocs.order_status_id=oc.order_status_id INNER JOIN oc_order_option as oo ON oo.order_product_id=oc.order_id  WHERE oc.language_id=ocs.language_id and oc.order_id=$orderid";
 	
 	$sql1_data = mysqli_query($conn,$sql1);
 	
@@ -51,11 +51,79 @@ $data=[
 					'phone'=>$rows['telephone'],
 					'vendorCode'=>null,
 					'erpCode'=>null,
-				]		  
+				],
+	'lineItems'=>[
+			'id'=>$rows['order_product_id'],
+			'quantity'=>null,
+			'price'=>null,
+			'name'=>null,
+			'presentation'=>null,
+			'sku'=>null,
+			'erpCode'=>null,
+			'adjustmentsTotal'=>null,
+	],
+	'allAdjustments'=>[],
+	'pricing'=>[
+					'adjustmentsTotal'=>null,
+					'subtotal'=>null,
+					'tax'=>null,
+					'deliveryCost'=>null,
+					'total'=>$rows['total'],	
+				],
+	'shipping'=>[
+					'name'=>$rows['shipping_method'],
+					'deliveryDate'=>'',
+					'deliveryAddress'=>[
+											'id'=>null,
+											'address'=>$rows['shipping_address_1'],
+											'erpCode'=>null,
+											'apartment'=>null,
+											'reference'=>null,
+											'coordinates'=>null,
+											'contactPerson'=>$rows['firstname'].' '.$rows['lastname'],
+											'contactPhone'=>$rows['telephone'],
+											'contactDocumentNumber'=>null,
+											'contactEmail'=>$rows['email'],
+											'localityTree'=>[
+																'division'=>$rows['shipping_city'],
+																'name'=>$rows['shipping_zone'],
+															],
+
+										],
+					'territory'=>[
+										'name'=>$rows['shipping_postcode'],
+										'metadata'=>[
+												'RUTA'=>null,
+												'ZONA'=>null,
+												'MODULO'=>null,
+												'COMPANIA'=>null,
+												'SUCURSAL'=>null,
+												'DESCOMPAN'=>null,
+												'DESUCURSAL'=>null,
+								]					
+
+				],
+	'payment'=>[
+					'name'=>$rows['payment_method'],
+					'transactionId'=>null,
+				],
+	'invoicing'=>[
+					'name'=>null,
+					'documentNumber'=>null,
+					'fiscalName'=>$rows['payment_company'],
+					'fiscalAddress'=>$rows['payment_address_1'],
+					'email'=>$rows['email'],
+
+				],
+	'creator'=>[
+					'name'=>null,
+					'erpCode'=>null,
+			   ]						
 
 
 
+
+	],
 	];
-	
 	die(showMessage([200,0,$data]));
 ?>
