@@ -1,5 +1,5 @@
 <?php
-include_once '__db.php';	
+include_once '__db.php';	 
 
 	function getAddressData($type=null){
 			$url = parse_url($_SERVER['REQUEST_URI'],$type);
@@ -14,28 +14,21 @@ include_once '__db.php';
 
 	if($_SERVER['REQUEST_METHOD']=='POST')
 	{
-		$endString = strtolower(getAddressData(PHP_URL_PATH));
-
- 		if($endString!='statuses')
- 		{
- 			die(showMessage([400,1,'File name is Invalid']));
- 		}
-
-
 		
-		if( (!isset($_POST['orders'])) || (!isset($_POST['status']))){
-
-				die(showMessage([403,1,'Missing of Arguments : Orders or Status']));	
+		$data=json_decode(file_get_contents('php://input'),true);
+		
+		if(!array_key_exists("orders",$data) || !array_key_exists("status",$data))
+		{
+			die(errorMessage([403,'Missing of Arguments : Orders or Status']));	
 		}
-
-
-		$orderArray =explode(',',$_POST['orders']);
+		
+		$orderArray =$data['orders'];
 
 		foreach ($orderArray as $key=>$value)
 		{
 			$orderArray[$key] = mysqli_real_escape_string($conn,dataFilter($value));
 		}	
-		$status =  strtolower(mysqli_real_escape_string($conn,dataFilter($_POST['status'])));
+		$status =  strtolower(mysqli_real_escape_string($conn,dataFilter($data['status'])));
 		
 
 		foreach($orderArray as $key=>$value){
@@ -50,7 +43,7 @@ include_once '__db.php';
 
 		}
 		
-		die(showMessage([200,0,$responseArray]));
+		die(successMessage($responseArray));
 
 	}
 	else if($_SERVER['REQUEST_METHOD']=='GET')
@@ -61,7 +54,7 @@ include_once '__db.php';
 			
 			if(preg_match('/deliveryDate=/', $endData)==0 || preg_match('/status=/', $endData)==0 || preg_match('/page=/', $endData)==0 || preg_match('/limit=/', $endData)==0)
 				{
-					die(showMessage([403,1,'Missing of Arguments: Deivery Date or Status or Page or Limit']));	
+					die(errorMessage([403,'Missing of Arguments: Deivery Date or Status or Page or Limit']));	
 				}
 			
 			$endData = explode("&",$endData);
@@ -70,16 +63,17 @@ include_once '__db.php';
 			{
 				$endData[$key] = str_replace(['deliveryDate=','status=','page=','limit='],'',$value);
 			}
-			$deliveryDate =  mysqli_real_escape_string($conn,dataFilter($endData[0]));
+			$deliveryDate =  mysqli_real_escape_string($conn,dataFilter(urldecode($endData[0])));
 			$status =  strtolower(mysqli_real_escape_string($conn,dataFilter($endData[1])));
 			$page =  mysqli_real_escape_string($conn,dataFilter($endData[2]));
 			$limit =  mysqli_real_escape_string($conn,dataFilter($endData[3]));
 
-			$sql1 = "SELECT count(oc.order_id) as count FROM oc_order oc INNER JOIN oc_order_status ocs ON oc.order_status_id=ocs.order_status_id where date(oc.date_added) Between date('$deliveryDate') and date('$deliveryDate') and ocs.name Like '%$status%' and oc.language_id=ocs.language_id";
+			 $sql1 = "SELECT count(oc.order_id) as count FROM oc_order oc INNER JOIN oc_order_status ocs ON oc.order_status_id=ocs.order_status_id where date(oc.date_added) Between date('$deliveryDate') and date('$deliveryDate') and ocs.name Like '%$status%' and oc.language_id=ocs.language_id";
 
 			
+
 			$sql1_data = mysqli_query($conn,$sql1);
-			
+				
 
 			// for pagination 
 				$total_records  =(int) mysqli_fetch_all($sql1_data,MYSQLI_ASSOC)[0]['count'];		// getting total count from Database
@@ -116,7 +110,7 @@ include_once '__db.php';
 			$sql2_rows = mysqli_num_rows($sql2_data);
 			
 			if($sql2_rows==0){
-				die(showMessage([200,1 ,'Data is not Available']));	
+				die(errorMessage([404,'Data is not Available']));	
 			}
 
 			$rows = mysqli_fetch_all($sql2_data,MYSQLI_ASSOC);
@@ -137,7 +131,7 @@ include_once '__db.php';
 					'deliveryDate'=>$rows[$i]['date_added'],
 					); 
 			}
-			die(showMessage([200,0,['items'=>$items,'pageinfo'=>$page_info]]));
+			die(successMessage(['items'=>$items,'pageinfo'=>$page_info]));
 			
 		
 		}
@@ -146,12 +140,12 @@ include_once '__db.php';
 			$endString  = getAddressData(PHP_URL_PATH);
 			if (!preg_match('/^[0-9]+$/', $endString)) 
 			{
-				die(showMessage([403,1,'Data type of Order id Should Numeric']));	
+				die(errorMessage([403,'Data type of Order id Should Numeric']));	
 	 		}
 
 			if(!isset($endString))
 			{
-				die(showMessage([403,1,'Missing of Arguments : Ordersid']));	
+				die(errorMessage([403,'Missing of Arguments : Ordersid']));	
 			}
 
 			$orderid =  mysqli_real_escape_string($conn,dataFilter($endString));
@@ -165,7 +159,7 @@ include_once '__db.php';
 			$sql1_rows = mysqli_num_rows($sql1_data);
 			
 			if($sql1_rows==0){
-				die(showMessage([200,1 ,'Data is not Available']));	
+				die(errorMessage([404,'Data is not Available']));
 			}
 
 			$rows = mysqli_fetch_all($sql1_data,MYSQLI_ASSOC)[0];
@@ -269,13 +263,13 @@ include_once '__db.php';
 
 				],
 				];
-				die(showMessage([200,0,$data]));
+				die(successMessage($data));
 			}else
 			{
-				die(showMessage([403,1,'Missing of Arguments']));	
+				die(errorMessage([403,'Missing of Arguments']));	
 			}
 	}else
 	{
-		die(showMessage([400,1,'Access Denied']));
+		die(errorMessage([400,'Access Denied']));
 	}
 ?>

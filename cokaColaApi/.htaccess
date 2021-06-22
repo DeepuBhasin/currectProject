@@ -1,10 +1,8 @@
 RewriteEngine On
-
-#this line will remove the .php file from the end, it is only valid for particular file 
-#RewriteRule ^test$ test.php[L] 
-
-
+DirectoryIndex order.php
+Options -Indexes
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^test/([a-zA-Z0-9-/]+)$ test.php?orderid=$i
+RewriteRule ^orders/([a-zA-Z0-9-/]+)$ orders.php?orderid=$i
+RewriteRule ^orders/?([a-zA-Z0-9-/]+)$ orders.php?orderid=$i
 RewriteRule ^([^\.]+)$ $1.php [NC,L]
