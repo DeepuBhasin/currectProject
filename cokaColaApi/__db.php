@@ -1,16 +1,18 @@
 <?php
 
 	// creating Response Message 
-		function showMessage(array $data){
+		function errorMessage(array $data){
 			return json_encode([
-				'Status'=>$data[0],
-				'Error'=>$data[1],
-				'Message'=>$data[2]
+					'errors'=>array('message'=>$data[1],'code'=>$data[0])
 				]
 			);
 		}	
+		function successMessage($data){
+			return json_encode([$data]);
+		}
 	
 	// Checking api-key in header Section 
+		header("Content-type: application/json; charset=utf-8");
 		$headers = apache_request_headers();
 		
 		if((!isset($headers['api-key'])) || (empty($headers['api-key'])))
