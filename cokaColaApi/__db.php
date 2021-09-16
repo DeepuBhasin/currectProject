@@ -8,14 +8,15 @@
 			);
 		}	
 		function successMessage($data){
-			return json_encode([$data]);
+			return json_encode($data);
 		}
 	
 	// Checking api-key in header Section 
 		header("Content-type: application/json; charset=utf-8");
 		$headers = apache_request_headers();
-		
-		if((!isset($headers['api-key'])) || (empty($headers['api-key'])))
+		$apiKey=$headers['api-key'];
+
+		if((!isset($apiKey)) || (empty($apiKey)))
 		{
 			die(showMessage([403,1,'Required Api-Key for Authentication']));	
 		}
@@ -45,8 +46,9 @@
 	 }
 
 
-	 // checking Valid Api key in Database 
-	 	$apiKey = mysqli_real_escape_string($conn,dataFilter($headers['api-key']));
+	 // checking Valid Api key in Database $headers['api-key']
+
+	 	$apiKey = mysqli_real_escape_string($conn,dataFilter($apiKey));
 
 	    $sql = "SELECT `api_id`,`key` FROM oc_api WHERE `key`='$apiKey'";
 

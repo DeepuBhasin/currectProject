@@ -151,8 +151,12 @@ include_once '__db.php';
 			$orderid =  mysqli_real_escape_string($conn,dataFilter($endString));
 			
 
-			$sql1 = "SELECT oc.order_id,oc.store_name,oc.store_id,oc.date_added,oc.comment,oc.user_agent,oc.customer_id,oc.firstname,oc.lastname,oc.email,oc.telephone,oc.commission,oc.total,oc.shipping_method,oc.shipping_address_1,oc.email,oc.shipping_city,oc.shipping_zone,oc.shipping_postcode,oc.payment_method,oc.payment_company,oc.payment_address_1,ocs.name as status,oo.order_product_id
-		FROM oc_order as oc INNER JOIN oc_order_status as ocs ON ocs.order_status_id=oc.order_status_id INNER JOIN oc_order_option as oo ON oo.order_product_id=oc.order_id  WHERE oc.language_id=ocs.language_id and oc.order_id=$orderid";
+			$sql1 = "SELECT oc.order_id,oc.store_name,oc.store_id,oc.date_added,oc.comment,oc.user_agent,oc.customer_id,oc.firstname,oc.lastname,oc.email,oc.telephone,oc.commission,oc.total,oc.shipping_method,oc.shipping_address_1,oc.email,oc.shipping_city,oc.shipping_zone,oc.shipping_postcode,oc.payment_method,oc.payment_company,oc.payment_address_1,ocs.name as status,oo.order_product_id,oot.code,ooh.comment as history_comment,oos.order_shipment_id 
+		FROM oc_order as oc INNER JOIN oc_order_status as ocs ON ocs.order_status_id=oc.order_status_id INNER JOIN oc_order_option as oo ON oo.order_product_id=oc.order_id INNER JOIN oc_order_total as oot ON oot.order_id=oc.order_id INNER JOIN oc_order_history as ooh ON ooh.order_id=oc.order_id LEFT JOIN oc_order_shipment as oos on oos.order_id=oc.order_id  WHERE oc.language_id=ocs.language_id and oot.code='total' and oc.order_id=$orderid";
+
+			$sql2 = "SELECT oop.*,oo.commission,op.sku FROM oc_order_option as ooo LEFT JOIN oc_order_product as oop ON oop.order_product_id=ooo.order_product_id INNER JOIN oc_order as oo ON oop.order_id=oo.order_id LEFT JOIN oc_product as op ON op.product_id=oop.product_id WHERE ooo.order_id=$orderid";
+
+
 			
 			$sql1_data = mysqli_query($conn,$sql1);
 			
@@ -162,8 +166,50 @@ include_once '__db.php';
 				die(errorMessage([404,'Data is not Available']));
 			}
 
+			$sql2_data = mysqli_query($conn,$sql2);
+
 			$rows = mysqli_fetch_all($sql1_data,MYSQLI_ASSOC)[0];
 
+			$rows2 = mysqli_fetch_all($sql2_data,MYSQLI_ASSOC);
+			
+			$reward = 0;
+			$tax = 0;
+			$price = 0;
+			$total = 0;
+
+			if(isset($rows2) && !empty($rows2))
+			{
+
+				foreach($rows2 as $key=>$value){
+						$lineItems[]=[
+							'id'=>$value['order_product_id'],
+							'quantity'=>$value['quantity'],
+							'price'=>$value['price'],
+							'name'=>$value['name'],
+							'presentation'=>$value['name'],
+							'sku'=>$value['sku'],
+							'erpCode'=>null,
+							'adjustmentsTotal'=> empty($value['commission']) ? $value['commission'] : null,
+					];
+					$reward += $value['reward'];
+					$tax += $value['tax'];
+					$price += $value['price'];
+					$total += $value['total'];
+				}
+			}else
+			{
+					$lineItems=[
+						'id'=>$rows['order_product_id'],
+						'quantity'=>null,
+						'price'=>null,
+						'name'=>null,
+						'presentation'=>null,
+						'sku'=>null,
+						'erpCode'=>null,
+						'adjustmentsTotal'=>null,
+				];
+			}
+		
 		$data=[
 			'id'=>$rows['order_id'],
 			'code'=>'IND'.$rows['order_id'],
@@ -177,9 +223,10 @@ include_once '__db.php';
 			'createdAt'=>$rows['date_added'],
 			'creationDate'=>$rows['date_added'],
 			'creationTime'=>$rows['date_added'],
+			'total'=>$rows['total'],
 			'extraFields'=>null,
 			'channel'=>'Ecommerce',
-			'dedicationMessage'=>$rows['comment'],
+			'dedicationMessage'=>(!empty($rows['comment'])) ? $rows['comment'] : null,
 			'userAgent'=>$rows['user_agent'],
 			'customer'=>[
 							'id'=>$rows['customer_id'],
@@ -190,21 +237,24 @@ include_once '__db.php';
 							'vendorCode'=>null,
 							'erpCode'=>null,
 						],
-			'lineItems'=>[
-					'id'=>$rows['order_product_id'],
-					'quantity'=>null,
-					'price'=>null,
-					'name'=>null,
-					'presentation'=>null,
-					'sku'=>null,
-					'erpCode'=>null,
-					'adjustmentsTotal'=>null,
-			],
+			'lineItems'=>$lineItems,
+			// 'allAdjustments'=>[
+			// 				'adjustableType'=>'order',
+			// 				'adjustableId'=>$rows['order_id'],
+			// 				'promotionName'=>null,
+			// 				'couponCode'=>null,
+			// 				'amount'=>null,
+
+			// 			],
 			'allAdjustments'=>[],
+			'configuration'=>[
+								'type'=>'percentage',
+								'value'=>null
+							],			
 			'pricing'=>[
-							'adjustmentsTotal'=>null,
-							'subtotal'=>null,
-							'tax'=>null,
+							'adjustmentsTotal'=> (!empty($reward)) ? $reward : "0.00",
+							'subtotal'=> (!empty($total)) ? $total : "0.00",
+							'tax'=> (!empty($tax)) ? $tax : "0.00",
 							'deliveryCost'=>null,
 							'total'=>$rows['total'],	
 						],
@@ -212,7 +262,7 @@ include_once '__db.php';
 							'name'=>$rows['shipping_method'],
 							'deliveryDate'=>'',
 							'deliveryAddress'=>[
-													'id'=>null,
+													'id'=>$rows['order_shipment_id'],
 													'address'=>$rows['shipping_address_1'],
 														'erpCode'=>null,
 													'apartment'=>null,
@@ -243,14 +293,14 @@ include_once '__db.php';
 						],
 			'payment'=>[
 							'name'=>$rows['payment_method'],
-							'transactionId'=>null,
+							'transactionId'=>$rows['history_comment'],
 						],
 			'invoicing'=>[
 							'name'=>null,
 							'documentNumber'=>null,
-							'fiscalName'=>$rows['payment_company'],
-							'fiscalAddress'=>$rows['payment_address_1'],
-							'email'=>$rows['email'],
+							'fiscalName'=>(!empty($rows['payment_company'])) ? $rows['payment_company'] : null ,
+							'fiscalAddress'=>(!empty($rows['payment_address_1'])) ? $rows['payment_address_1'] : null ,
+							'email'=>(!empty($rows['email'])) ? $rows['email'] : null ,
 
 						],
 			'creator'=>[
