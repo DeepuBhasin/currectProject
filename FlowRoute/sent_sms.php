@@ -20,13 +20,8 @@
                     <th>Page Type</th>
                     <th>Amount</th>
                     <th>Body</th>
-                    <th>Direction</th>
                     <th>From</th>
                     <th>To</th>
-                    <th>Message Type</th>
-                    <th>Time Stamp</th>
-                    <th>Mdr2 Id</th>
-                    <th>Type</th>
                     <th>Status</th>
                     <th>Created Date</th>
                   </tr>
@@ -42,13 +37,8 @@
                       <td><?= ucwords($ab['page_type']); ?></td>
                       <td><?= $ab['amount_display'] ?></td>
                       <td><?= $ab['body']; ?></td>
-                      <td><?= $ab['direction'] ?></td>
                       <td><?= $ab['message_from'] ?></td>
                       <td><?= $ab['send_to'] ?></td>
-                      <td><?= $ab['message_type'] ?></td>
-                      <td><?= $ab['timestamp'] ?></td>
-                      <td><?= $ab['mdr2_id']; ?></td>
-                      <td><?= $ab['type']; ?></td>
                       <td><?= $ab['status']; ?></td>
                       <td><?= $ab['created_dt']; ?></td>
                     </tr>

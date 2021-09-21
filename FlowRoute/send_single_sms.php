@@ -28,6 +28,8 @@
           <div class="panel-body">
             <form role="form" action="<?= $_SERVER['PHP_SELF']; ?>" method="post">
               <input type="hidden" name="page_type" value="send single sms">
+              <input type="hidden" name="checkCountryStatus" value="1">
+
               <div class="form-group">
                 <label for="country_id">Select Country *</label>
                 <select class="form-control" name="country_id" required="" id="country_id">

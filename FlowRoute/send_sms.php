@@ -9,14 +9,19 @@ if (isset($_POST['send_sms'])) {
 
     $messagebody = mysqli_real_escape_string($con, htmlentities(trim($_POST['message'])));
     $from = $_POST['from'];
-    $mobile_number = '+' . $_POST['country_id'] . $_POST['mobile_number'];
+    if (isset($_POST['checkCountryStatus'])) {
+        $mobile_number = '+' . $_POST['country_id'] . $_POST['mobile_number'];
+    } else {
+        $mobile_number = '+' . $_POST['mobile_number'];
+    }
+
     $page_type = $_POST['page_type'];
 
 
     /* Demo script*/
 
     #Instantiate the Controller and pass your API credentials
-    $controller = new MessagesController('1e359588', 'b4d85e373de7435f83bac6a912075c09');
+    $controller = new MessagesController('ed7c15bd', 'dfe1092a7ba34a8d81629fd6f4d2c704');
     $to_number = $mobile_number;
     $from_number = $from;
 
@@ -31,7 +36,13 @@ if (isset($_POST['send_sms'])) {
 
         $mdr_record = $controller->getMessageLookup($mdr_id); // 'mdr1-b334f89df8de4f8fa7ce377e06090a2e'
 
-        $attributes = $mdr_record->data->attributes;
+        if ($mdr_record->code == 404) {
+            $succesMessgae = 'success with 404';
+        } else {
+            $attributes = $mdr_record->body->data->attributes;
+            $succesMessgae = 'success with 200';
+        }
+        $succesMessgaeStatus = true;
     }
 
     $insertArray = [
@@ -43,9 +54,9 @@ if (isset($_POST['send_sms'])) {
         isset($attributes->message_type) ? $attributes->message_type : 'NA',
         isset($attributes->timestamp) ? $attributes->timestamp : 'NA',
         $to_number,
-        isset($mdr_record->data->id) ? $mdr_record->data->id : 'NA',
-        isset($mdr_record->data->type) ? $mdr_record->data->type : 'NA',
-        isset($attributes->amount_display) ? 'success' : 'fail',
+        isset($mdr_record->data->id) ? $mdr_record->body->data->id : 'NA',
+        isset($mdr_record->data->type) ? $mdr_record->body->data->type : 'NA',
+        isset($succesMessgaeStatus) ? $succesMessgae : 'fail',
         $_SESSION['id'],
         $get_time
 
@@ -55,7 +66,7 @@ if (isset($_POST['send_sms'])) {
     mysqli_query($con, $sqlMessage);
 
     $MessageSent = true;
-    $color  = isset($attributes->amount_display) ? 'success' : 'danger';
-    $smsMessage  = isset($attributes->amount_display) ?
+    $color  = isset($succesMessgaeStatus) ? 'success' : 'danger';
+    $smsMessage  = isset($succesMessgaeStatus) ?
         "Message Successfully Send on $mobile_number "  :  "Message Failed to Deliver on $mobile_number ";
 }

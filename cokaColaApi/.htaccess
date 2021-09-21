@@ -1,8 +1,0 @@
-RewriteEngine On
-DirectoryIndex order.php
-Options -Indexes
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^orders/([a-zA-Z0-9-/]+)$ orders.php?orderid=$i
-RewriteRule ^orders/?([a-zA-Z0-9-/]+)$ orders.php?orderid=$i
-RewriteRule ^([^\.]+)$ $1.php [NC,L]

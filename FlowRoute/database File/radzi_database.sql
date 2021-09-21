@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 29, 2021 at 06:15 PM
+-- Generation Time: Sep 16, 2021 at 09:09 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 7.4.22
 
@@ -296,6 +296,22 @@ INSERT INTO `country` (`id`, `iso`, `name`, `phonecode`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `group_table`
+--
+
+CREATE TABLE `group_table` (
+  `id` int(11) NOT NULL,
+  `group_name` varchar(150) DEFAULT NULL,
+  `remarks` varchar(225) DEFAULT NULL,
+  `status` int(11) NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `created_dt` datetime NOT NULL,
+  `update_dt` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `login`
 --
 
@@ -314,7 +330,8 @@ CREATE TABLE `login` (
 --
 
 INSERT INTO `login` (`id`, `first_name`, `last_name`, `email_id`, `password`, `login_time`, `login_address`) VALUES
-(1, 'Admin', 'main', 'admin@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '2021-08-29 12:14:58', '::1');
+(1, 'Admin', 'main', 'admin@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '2021-09-16 22:19:31', '::1'),
+(2, 'deepinder', 'Singh', 'deepinder999@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '2021-09-16 22:19:31', '::1');
 
 -- --------------------------------------------------------
 
@@ -324,16 +341,17 @@ INSERT INTO `login` (`id`, `first_name`, `last_name`, `email_id`, `password`, `l
 
 CREATE TABLE `sms_history` (
   `sms_id` int(11) NOT NULL,
-  `account_sid` varchar(200) NOT NULL,
-  `sid` varchar(200) DEFAULT NULL,
-  `type` varchar(50) DEFAULT NULL,
-  `send_to` varchar(200) DEFAULT NULL,
-  `message_from` varchar(200) DEFAULT NULL,
+  `page_type` varchar(20) DEFAULT NULL,
+  `amount_display` varchar(150) NOT NULL,
   `body` longtext DEFAULT NULL,
-  `num_segments` int(11) DEFAULT NULL,
+  `direction` varchar(150) DEFAULT NULL,
+  `message_from` varchar(200) DEFAULT NULL,
+  `message_type` varchar(150) NOT NULL,
+  `timestamp` varchar(255) NOT NULL,
+  `send_to` varchar(200) DEFAULT NULL,
+  `mdr2_id` varchar(255) NOT NULL,
+  `type` varchar(50) DEFAULT NULL,
   `status` varchar(50) DEFAULT NULL,
-  `remarks` varchar(1000) DEFAULT NULL,
-  `method` varchar(50) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `created_dt` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -346,6 +364,7 @@ CREATE TABLE `sms_history` (
 
 CREATE TABLE `user` (
   `user_id` int(11) NOT NULL,
+  `group_id` int(11) DEFAULT NULL,
   `full_name` varchar(150) DEFAULT NULL,
   `mobile_number` varchar(50) DEFAULT NULL,
   `country_code` int(11) DEFAULT NULL,
@@ -365,6 +384,12 @@ CREATE TABLE `user` (
 -- Indexes for table `country`
 --
 ALTER TABLE `country`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `group_table`
+--
+ALTER TABLE `group_table`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -396,10 +421,16 @@ ALTER TABLE `country`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=254;
 
 --
+-- AUTO_INCREMENT for table `group_table`
+--
+ALTER TABLE `group_table`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `login`
 --
 ALTER TABLE `login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `sms_history`
