@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!-- 
+    StudentID: 18329328
+    Name: Derick Tran
+-->
+<!--This Document contains customer information-->
+<customer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="customers.xsd">
+	<customerInfo no="BL343456">
+		<name>
+			<firstname>Bart</firstname>
+			<lastname>Simpson</lastname>
+		</name>
+		<address>
+			<street>45 Olive Drive</street>
+			<suburb>Sydney</suburb>
+			<postcode>2000</postcode>
+			<state>NSW</state>
+		</address>
+		<phoneNo>0298576433</phoneNo>
+		<phoneNo>0413335678</phoneNo>
+		<phoneNo>0296784455</phoneNo>
+		<licence>1234AB</licence>
+		<email>bart.simpson@hotmail.com</email>
+		<nominatedDriver lic="6789IJ">
+			<name>
+				<firstname>Marge</firstname>
+				<lastname>Simpson</lastname>
+			</name>
+			<address>
+				<street>45 Olive Drive</street>
+				<suburb>Sydney</suburb>
+				<postcode>2000</postcode>
+				<state>NSW</state>
+			</address>
+			<phoneNo>0453876590</phoneNo>
+		</nominatedDriver>
+		<nominatedDriver lic="7890KL">
+			<name>
+				<firstname>Homer</firstname>
+				<lastname>Simpson</lastname>
+			</name>
+			<address>
+				<street>45 Olive Drive</street>
+				<suburb>Sydney</suburb>
+				<postcode>2000</postcode>
+				<state>NSW</state>
+			</address>
+			<phoneNo>0453876577</phoneNo>
+		</nominatedDriver>
+	<nominatedDriver lic="124578"><name><firstname>nupp</firstname><lastname>kaur</lastname></name><address><street>street no 3</street><suburb>house 41</suburb><postcode>147001</postcode><state>punjab</state></address><phone>9780038419</phone></nominatedDriver></customerInfo>
+<customerInfo no="12345"><name><title>titile</title><firstname>firstname</firstname><middlename>middel</middlename><lastname>lastname</lastname></name><address><street>street</street><suburb>suburb</suburb><postcode>147001</postcode><state>state</state></address><phone>9915099247</phone><phone1>8437376006</phone1><phone2>8080808080</phone2><licence>12457863</licence><email>Deepinder999@gmail.com</email><nominatedDriver no="nominted number"><name><firstname>simran</firstname><lastname>jeet</lastname></name><address><street>lelehal 42</street><suburb>suburb nominated</suburb><postcode>147001</postcode><state>punjab</state></address><phone>9780038419</phone></nominatedDriver>
+
+	<nominatedDriver lic="124578">
+			<name>
+				<firstname>nupp</firstname>
+				<lastname>kaur</lastname>
+			</name>
+			<address>
+				<street>street no 3</street>
+				<suburb>house 41</suburb>
+				<postcode>147001</postcode>
+				<state>punjab</state>
+			</address>
+			<phone>9780038419</phone>
+	</nominatedDriver>
+	<nominatedDriver lic="124578">
+			<name>
+				<firstname>nupp</firstname>
+				<lastname>kaur</lastname>
+			</name>
+			<address>
+				<street>street no 3</street>
+				<suburb>house 41</suburb>
+				<postcode>147001</postcode>
+				<state>punjab</state>
+			</address>
+			<phone>9780038419</phone>
+		</nominatedDriver>
+			</customerInfo>
+				<customerInfo no="123">
+					<name>
+						<title>mr</title>
+						<firstname>abc</firstname>
+						<middlename>bcd</middlename>
+						<lastname>efg</lastname>
+					</name>
+					<address>
+						<street>3 with house number 4</street>
+						<suburb>abc </suburb>
+						<postcode>147001</postcode>
+						<state>punjab</state>
+					</address>
+					<phone>123456789</phone>
+					<phone1>124578</phone1>
+					<phone2>4578</phone2>
+					<licence>682818lcm</licence>
+					<email>abc@gmail.com</email>
+					<nominatedDriver lic="46352oi">
+						<name>
+							<firstname>aaa</firstname>
+							<lastname>bb</lastname>
+					</name><address><street>cc</street><suburb>3637ok</suburb><postcode>11111</postcode><state>okokok</state></address><phone>2534373836</phone></nominatedDriver><nominatedDriver lic="okokok"><name><firstname>okokok</firstname><lastname>okokok</lastname></name><address><street>okokok</street><suburb>okokok</suburb><postcode>11111</postcode><state>okokok</state></address><phone>8768768768</phone></nominatedDriver></customerInfo><customerInfo no=""><name><title/><firstname/><middlename/><lastname/></name><address><street/><suburb/><postcode/><state/></address><phone/><phone1/><phone2/><licence/><email/><nominatedDriver lic=""><name><firstname/><lastname/></name><address><street/><suburb/><postcode/><state/></address><phone/></nominatedDriver><nominatedDriver lic="44"><name><firstname>444</firstname><lastname>444</lastname></name><address><street>444</street><suburb>444</suburb><postcode>444</postcode><state>444</state></address><phone>444</phone></nominatedDriver></customerInfo><customerInfo no=""><name><title>5</title><firstname>5</firstname><middlename>5</middlename><lastname>5</lastname></name><address><street>5</street><suburb>5</suburb><postcode>5</postcode><state>5</state></address><phone>5</phone><phone1>5</phone1><phone2>5</phone2><licence/><email/><nominatedDriver lic=""><name><firstname/><lastname/></name><address><street/><suburb/><postcode/><state/></address><phone/></nominatedDriver><nominatedDriver lic="55"><name><firstname>55</firstname><lastname>55</lastname></name><address><street>55</street><suburb>55</suburb><postcode>55</postcode><state>55</state></address><phone>55</phone></nominatedDriver></customerInfo><customerInfo no=""><name><title>okok</title><firstname>okokokok</firstname><middlename>okokokok</middlename><lastname>okokokok</lastname></name><address><street>okokoko</street><suburb>kokokok</suburb><postcode>2121</postcode><state>212121</state></address><phone>212121212</phone><phone1>12121212</phone1><phone2>1212121</phone2><licence/><email/><nominatedDriver lic=""><name><firstname/><lastname/></name><address><street/><suburb/><postcode/><state/></address><phone/></nominatedDriver><nominatedDriver lic="6"><name><firstname>6</firstname><lastname>6</lastname></name><address><street>6</street><suburb>6</suburb><postcode>6</postcode><state>6</state></address><phone>6</phone></nominatedDriver></customerInfo></customer>
